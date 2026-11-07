@@ -1,0 +1,109 @@
+body {
+  font-family: Verdana, Tahoma, sans-serif;
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 16px;
+  color: #1a1a1a;
+  background: #ffffff;
+  line-height: 1.5;
+}
+
+header {
+  border-bottom: 2px solid #1a1a1a;
+  margin-bottom: 16px;
+}
+
+section {
+  border: 0;
+  border-top: 2px solid #1a1a1a;
+  padding: 16px 0;
+  margin-bottom: 8px;
+}
+
+:focus-visible {
+  outline: 3px solid #0b5cad;
+  outline-offset: 2px;
+}
+
+.success { color: #14532d; }
+.error { color: #a40000; }
+
+#subject-list { list-style: none; padding-left: 0; }
+#subject-list li { border-bottom: 1px solid #cccccc; padding: 6px 0; }
+#subject-list button { margin-left: 8px; }
+
+#subject-tabs button { margin-right: 6px; margin-bottom: 8px; }
+#subject-tabs button.selected { background: #1a1a1a; color: #ffffff; }
+
+#project-form div { margin-bottom: 8px; }
+
+#project-list { list-style: none; padding-left: 0; }
+#project-list li { border-bottom: 1px solid #cccccc; padding: 6px 0; }
+#project-list button { margin-left: 8px; }
+
+#project-list li.selected-row { border-left: 4px solid #1a1a1a; padding-left: 8px; background: #f0f0f0; }
+
+#project-detail, #task-detail { margin-top: 16px; border-top: 1px solid #888888; padding-top: 8px; }
+#member-form, #task-form div { margin-bottom: 8px; }
+
+#task-list { list-style: none; padding-left: 0; }
+#task-list li { border-bottom: 1px solid #cccccc; padding: 6px 0; }
+#task-list select { margin-left: 4px; margin-right: 8px; }
+
+/* My Tasks: overdue rows get a red bar AND the word OVERDUE (not color alone). */
+#mytasks-section label { margin-left: 8px; }
+
+/* Live feedback under a field. */
+.field-feedback { display: block; color: #a40000; }
+
+/* Make the hidden attribute always win (table cells included). */
+[hidden] { display: none !important; }
+
+/* Sticky message bar: stays at the top of the window while you scroll. */
+#message {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: #ffffff;
+  min-height: 1.5em;          /* keeps its height when empty so the page does not jump */
+  margin: 0 0 16px;
+  padding: 8px 12px;
+  border-left: 4px solid transparent;
+}
+#message.error { border-left-color: #a40000; }
+#message.success { border-left-color: #14532d; }
+
+/* Add-forms are boxed with a heading. Lists and tables are not boxed. */
+.form-block { border: 1px solid #888888; padding: 8px 12px; margin: 0 0 12px; }
+.form-block legend { font-weight: bold; padding: 0 6px; }
+
+/* Tables for the roster and My Tasks. */
+table { border-collapse: collapse; width: 100%; margin-top: 8px; }
+th, td { border: 0; border-bottom: 1px solid #cccccc; padding: 8px 10px; text-align: left; vertical-align: top; }
+th { background: #f0f0f0; }
+td button { margin-right: 6px; }
+tr.overdue { background: #fdf0f0; }
+tr.overdue td:first-child { border-left: 4px solid #a40000; font-weight: bold; }
+
+/* Page navigation: same look as the subject tabs. */
+#main-nav button { margin-right: 6px; margin-bottom: 8px; }
+#main-nav button.selected { background: #1a1a1a; color: #ffffff; }
+
+/* Demo tools footer. */
+footer { border-top: 1px solid #cccccc; margin-top: 24px; padding-top: 8px; }
+footer summary { cursor: pointer; }
+
+/* Type scale: three sizes. Secondary info is smaller and gray. */
+h1 { font-size: 1.6rem; margin: 8px 0; }
+h2 { font-size: 1.2rem; margin: 0 0 8px; }
+h3 { font-size: 1rem; }
+.meta { color: #444444; font-size: 0.9rem; }
+
+/* Status badges: differ by fill and weight, so they work without color. */
+.badge { display: inline-block; padding: 1px 8px; border: 2px solid #1a1a1a; font-size: 0.85rem; }
+.badge-to-do, .badge-not-started { background: #ffffff; color: #1a1a1a; }
+.badge-doing, .badge-ongoing { background: #dddddd; color: #1a1a1a; font-weight: bold; }
+.badge-done, .badge-completed { background: #1a1a1a; color: #ffffff; }
+
+/* Overdue task in the project task list. */
+#task-list li.overdue-row { border-left: 4px solid #a40000; padding-left: 8px; background: #fdf0f0; }

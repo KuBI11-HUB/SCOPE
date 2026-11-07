@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SCOPE - Group Project Tracker</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+  <!-- 1. HEADER -->
+  <header>
+    <h1>SCOPE</h1>
+    <p>Student Collaboration and Organization for Project Execution</p>
+    <nav id="main-nav" aria-label="Views">
+      <button type="button" id="nav-projects">Projects</button>
+      <button type="button" id="nav-detail">Project Detail</button>
+      <button type="button" id="nav-mytasks">My Tasks</button>
+    </nav>
+  </header>
+
+  <!-- 2. ACTING AS: picks which person the app pretends you are (simulation only) -->
+  <section id="acting-as-section" aria-labelledby="acting-as-heading">
+    <h2 id="acting-as-heading">Acting as</h2>
+    <label for="acting-as">Active person:</label>
+    <select id="acting-as" disabled>
+      <option>(open a project first)</option>
+    </select>
+    <p id="acting-as-status"></p>
+    <p id="role-note">Roles are a demonstration only. This is not a login.</p>
+  </section>
+
+  <!-- MESSAGE AREA: success and error messages -->
+  <p id="message" role="status"></p>
+
+  <!-- VIEW 1: Projects (only one view is visible at a time; views.js switches them) -->
+  <div id="view-projects">
+
+  <!-- 3. SUBJECTS AREA -->
+  <section id="subjects-section" aria-labelledby="subjects-heading">
+    <h2 id="subjects-heading">Subjects</h2>
+    <nav id="subject-tabs" aria-label="Subjects"></nav>
+
+    <form id="subject-form">
+      <fieldset class="form-block">
+        <legend>Add a subject</legend>
+      <label for="subject-name">Subject name:</label>
+      <input type="text" id="subject-name">
+      <button type="submit">Add Subject</button>
+      </fieldset>
+    </form>
+
+    <ul id="subject-list"></ul>
+  </section>
+
+  <!-- 4. PROJECTS AREA: projects of the selected subject, and the roster of the open project -->
+  <section id="projects-section" aria-labelledby="projects-heading">
+    <h2 id="projects-heading">Projects</h2>
+    <p id="projects-subject-label"></p>
+
+    <form id="project-form" hidden>
+      <fieldset class="form-block">
+        <legend>Add a project</legend>
+      <div>
+        <label for="project-name">Project name:</label>
+        <input type="text" id="project-name">
+      </div>
+      <div>
+        <label for="project-deadline">Deadline:</label>
+        <input type="date" id="project-deadline">
+      </div>
+      <div>
+        <label for="leader-name">Leader's name:</label>
+        <input type="text" id="leader-name">
+      </div>
+      <button type="submit">Add Project</button>
+      </fieldset>
+    </form>
+
+    <ul id="project-list"></ul>
+    <p>Open a project to see its roster and tasks.</p>
+
+  </section>
+
+  </div>
+
+  <!-- VIEW 2: Project Detail (roster + tasks of the open project) -->
+  <div id="view-detail" hidden>
+
+  <section id="roster-section" aria-labelledby="project-detail-heading">
+    <!-- Roster of the OPEN project. "leader-only" = hidden by applyRoleView() for Members -->
+    <div id="project-detail" hidden>
+      <h2 id="project-detail-heading"></h2>
+      <form id="member-form" class="leader-only">
+        <fieldset class="form-block">
+          <legend>Add a member</legend>
+        <label for="member-name">New member name:</label>
+        <input type="text" id="member-name">
+        <button type="submit">Add Member</button>
+        </fieldset>
+      </form>
+      <table id="member-table">
+        <thead>
+          <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Role</th>
+            <th scope="col">Tasks</th>
+            <th scope="col">Average score</th>
+            <th scope="col" class="leader-only">Actions</th>
+          </tr>
+        </thead>
+        <tbody id="member-list"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- 5. TASKS AREA: tasks of the open project -->
+  <section id="tasks-section" aria-labelledby="tasks-heading">
+    <h2 id="tasks-heading">Tasks</h2>
+    <p id="tasks-project-label"></p>
+
+    <div id="task-detail" hidden>
+      <form id="task-form" class="leader-only">
+        <fieldset class="form-block">
+          <legend>Add a task</legend>
+        <div>
+          <label for="task-title">Task title:</label>
+          <input type="text" id="task-title">
+        </div>
+        <div>
+          <label for="task-assignee">Assign to:</label>
+          <select id="task-assignee"></select>
+        </div>
+        <div>
+          <label for="task-due">Due date:</label>
+          <input type="date" id="task-due">
+        </div>
+        <button type="submit">Add Task</button>
+        </fieldset>
+      </form>
+      <div>
+        <label for="task-status-filter">Filter by status:</label>
+        <select id="task-status-filter">
+          <option value="">All</option>
+          <option>To Do</option>
+          <option>Doing</option>
+          <option>Done</option>
+        </select>
+        <button type="button" id="clear-task-filter" hidden>Clear Filters</button>
+      </div>
+      <p id="task-count"></p>
+      <ul id="task-list"></ul>
+    </div>
+  </section>
+
+  </div>
+
+  <!-- VIEW 3: My Tasks -->
+  <div id="view-mytasks" hidden>
+
+  <!-- 6. MY TASKS: the active person's tasks across all subjects -->
+  <section id="mytasks-section" aria-labelledby="mytasks-heading">
+    <h2 id="mytasks-heading">My Tasks</h2>
+    <p id="mytasks-label"></p>
+    <details>
+      <summary>Search and filters</summary>
+      <div>
+      <label for="mytasks-search">Search title:</label>
+      <input type="text" id="mytasks-search">
+      <label for="mytasks-subject">Subject:</label>
+      <select id="mytasks-subject"></select>
+      <label for="mytasks-status">Status:</label>
+      <select id="mytasks-status">
+        <option value="">All</option>
+        <option>To Do</option>
+        <option>Doing</option>
+        <option>Done</option>
+      </select>
+      <button type="button" id="clear-filters" hidden>Clear Filters</button>
+      </div>
+    </details>
+    <p id="mytasks-count"></p>
+    <table id="mytasks-table">
+      <thead>
+        <tr>
+          <th scope="col">Due</th>
+          <th scope="col">Task</th>
+          <th scope="col">Subject &gt; Project</th>
+          <th scope="col">Status</th>
+          <th scope="col">Score</th>
+        </tr>
+      </thead>
+      <tbody id="mytasks-list"></tbody>
+    </table>
+  </section>
+
+  </div>
+
+  <!-- Demo tools are tucked away: closed until clicked, and Reset needs a typed word. -->
+  <footer>
+    <details>
+      <summary>Demo tools</summary>
+      <p>Danger: the next button deletes everything saved.</p>
+      <p><button type="button" id="reset-data">Reset data</button></p>
+    </details>
+  </footer>
+
+  <!-- Order matters: data first (the arrays), app.js last (it starts everything). -->
+  <script src="js/data.js"></script>
+  <script src="js/helpers.js"></script>
+  <script src="js/subjects.js"></script>
+  <script src="js/projects.js"></script>
+  <script src="js/members.js"></script>
+  <script src="js/actingas.js"></script>
+  <script src="js/tasks.js"></script>
+  <script src="js/scoring.js"></script>
+  <script src="js/mytasks.js"></script>
+  <script src="js/feedback.js"></script>
+  <script src="js/views.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
