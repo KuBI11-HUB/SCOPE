@@ -88,7 +88,7 @@ function createTaskRow(task) {
   row.appendChild(makeStatusControl(task));
   row.appendChild(makeReassignControl(task));
   addScoreControls(row, task);   // score text + Score button (scoring.js)
-  const deleteButton = makeButton("Delete", function () { deleteTask(task.id); });
+  const deleteButton = makeButton("Delete", function () { deleteTask(task.id); }, "trash");
   deleteButton.className = "leader-only";
   row.appendChild(deleteButton);
   return row;
@@ -189,7 +189,7 @@ function addTask(event) {
 }
 
 // Runs when a status dropdown changes.
-function updateTaskStatus(taskId, newStatus) {
+async function updateTaskStatus(taskId, newStatus) {
   const task = tasks.find(t => t.id === taskId);
 
   if (!canChangeStatus(task)) {
@@ -200,7 +200,13 @@ function updateTaskStatus(taskId, newStatus) {
 
   // A scored task leaving Done loses its score, so ask first.
   if (task.score !== null && newStatus !== "Done") {
-    if (!confirm("Moving this task out of Done will clear its score. Continue?")) {
+    const sure = await showConfirmDialog({
+      title: "Clear this score?",
+      message: "Moving this task out of Done will clear its score. Continue?",
+      confirmLabel: "Move task",
+      destructive: true
+    });
+    if (!sure) {
       renderAll();   // put the dropdown back
       return;
     }
@@ -230,13 +236,19 @@ function reassignTask(taskId, newAssigneeId) {
 }
 
 // Runs when a task's Delete is clicked (Leader only).
-function deleteTask(taskId) {
+async function deleteTask(taskId) {
   if (!isActiveLeader()) {
     showMessage("Only the Leader can delete tasks.", true);
     return;
   }
   const task = tasks.find(t => t.id === taskId);
-  if (!confirm('Delete task "' + task.title + '"?')) {
+  const sure = await showConfirmDialog({
+    title: "Delete task?",
+    message: 'Delete "' + task.title + '"?',
+    confirmLabel: "Delete task",
+    destructive: true
+  });
+  if (!sure) {
     return;
   }
   tasks = tasks.filter(t => t.id !== taskId);

@@ -13,9 +13,9 @@
     <h1>SCOPE</h1>
     <p>Student Collaboration and Organization for Project Execution</p>
     <nav id="main-nav" aria-label="Views">
-      <button type="button" id="nav-projects">Projects</button>
-      <button type="button" id="nav-detail">Project Detail</button>
-      <button type="button" id="nav-mytasks">My Tasks</button>
+      <button type="button" id="nav-projects" data-icon="folder">Projects</button>
+      <button type="button" id="nav-detail" data-icon="details">Project Detail</button>
+      <button type="button" id="nav-mytasks" data-icon="checkList">My Tasks</button>
     </nav>
   </header>
 
@@ -41,12 +41,12 @@
     <h2 id="subjects-heading">Subjects</h2>
     <nav id="subject-tabs" aria-label="Subjects"></nav>
 
-    <form id="subject-form">
+    <form id="subject-form" class="leader-only">
       <fieldset class="form-block">
         <legend>Add a subject</legend>
       <label for="subject-name">Subject name:</label>
       <input type="text" id="subject-name">
-      <button type="submit">Add Subject</button>
+      <button type="submit" data-icon="plus">Add Subject</button>
       </fieldset>
     </form>
 
@@ -73,7 +73,7 @@
         <label for="leader-name">Leader's name:</label>
         <input type="text" id="leader-name">
       </div>
-      <button type="submit">Add Project</button>
+      <button type="submit" data-icon="plus">Add Project</button>
       </fieldset>
     </form>
 
@@ -96,7 +96,7 @@
           <legend>Add a member</legend>
         <label for="member-name">New member name:</label>
         <input type="text" id="member-name">
-        <button type="submit">Add Member</button>
+        <button type="submit" data-icon="personPlus">Add Member</button>
         </fieldset>
       </form>
       <table id="member-table">
@@ -135,7 +135,7 @@
           <label for="task-due">Due date:</label>
           <input type="date" id="task-due">
         </div>
-        <button type="submit">Add Task</button>
+        <button type="submit" data-icon="plus">Add Task</button>
         </fieldset>
       </form>
       <div>
@@ -146,7 +146,7 @@
           <option>Doing</option>
           <option>Done</option>
         </select>
-        <button type="button" id="clear-task-filter" hidden>Clear Filters</button>
+        <button type="button" id="clear-task-filter" data-icon="close" hidden>Clear Filters</button>
       </div>
       <p id="task-count"></p>
       <ul id="task-list"></ul>
@@ -176,7 +176,7 @@
         <option>Doing</option>
         <option>Done</option>
       </select>
-      <button type="button" id="clear-filters" hidden>Clear Filters</button>
+      <button type="button" id="clear-filters" data-icon="close" hidden>Clear Filters</button>
       </div>
     </details>
     <p id="mytasks-count"></p>
@@ -201,13 +201,28 @@
     <details>
       <summary>Demo tools</summary>
       <p>Danger: the next button deletes everything saved.</p>
-      <p><button type="button" id="reset-data">Reset data</button></p>
+      <p><button type="button" id="reset-data" data-icon="reset">Reset data</button></p>
     </details>
   </footer>
+
+  <dialog id="app-dialog" aria-labelledby="app-dialog-title" aria-describedby="app-dialog-message">
+    <div class="app-dialog__eyebrow">Confirm action</div>
+    <h2 id="app-dialog-title"></h2>
+    <p id="app-dialog-message"></p>
+    <div id="app-dialog-input-group" hidden>
+      <label id="app-dialog-input-label" for="app-dialog-input"></label>
+      <input type="text" id="app-dialog-input" autocomplete="off" aria-describedby="app-dialog-message">
+    </div>
+    <div class="app-dialog__actions">
+      <button type="button" id="app-dialog-cancel" data-icon="close">Cancel</button>
+      <button type="button" id="app-dialog-confirm" data-icon="confirm">Confirm</button>
+    </div>
+  </dialog>
 
   <!-- Order matters: data first (the arrays), app.js last (it starts everything). -->
   <script src="js/data.js"></script>
   <script src="js/helpers.js"></script>
+  <script src="js/dialogs.js"></script>
   <script src="js/subjects.js"></script>
   <script src="js/projects.js"></script>
   <script src="js/members.js"></script>

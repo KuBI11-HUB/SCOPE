@@ -1,578 +1,468 @@
-/* Tokens: the only place colors and the corner size are written. Everything below uses var(--name). */
 :root {
-  --bg: #f4f5f7;        /* the page itself, form insets, and table header cells */
-  --surface: #ffffff;   /* white panels: header, sections, tables; also text on dark fills */
-  --text: #1a1a1a;      /* main text and dark fills */
-  --muted: #5c5c5c;     /* secondary text, empty messages, and the edge of buttons and badges */
-  --border: #e5e7eb;    /* light panel edges, row lines, and the Doing badge fill */
-  --accent: #0b5cad;    /* institutional blue: selected nav chip, focus outline, Add buttons only */
-  --success: #14532d;   /* success messages */
-  --danger: #a40000;    /* errors and the overdue bar */
-  --radius: 8px;        /* small corner rounding for panels and chips */
+  color-scheme: light;
+  --page: #f1f2f3;
+  --surface: #fff;
+  --surface-soft: #f7f7f8;
+  --text: #242629;
+  --muted: #73777d;
+  --border: #e2e4e7;
+  --border-strong: #d3d6da;
+  --accent: #26282b;
+  --success: #356348;
+  --danger: #a63c3c;
+  --radius-panel: 12px;
+  --radius-card: 9px;
+  --radius-control: 6px;
+}
+
+* {
+  box-sizing: border-box;
 }
 
 body {
-  font-family: Verdana, Tahoma, sans-serif;
-  max-width: 960px;
+  width: 100%;
+  max-width: 1440px;
+  min-height: 100vh;
   margin: 0 auto;
-  padding: 16px;
+  padding: 20px 24px;
   color: var(--text);
-  background: var(--bg);
+  background: var(--page);
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 14px;
   line-height: 1.5;
 }
 
-header {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 12px 16px;
-  margin-bottom: 16px;
-}
-
+header,
 section {
-  background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 16px;
-  margin-bottom: 16px;
-}
-
-:focus-visible {
-  outline: 3px solid var(--accent);
-  outline-offset: 2px;
-}
-
-/* Controls: one quiet look for every button and field. */
-button, input[type="text"], input[type="date"], select {
-  font: inherit;
-  font-size: 0.9rem;
-  border: 1px solid var(--muted);   /* controls keep a darker edge so they look clickable */
-  border-radius: 6px;
+  border-radius: var(--radius-panel);
   background: var(--surface);
-  color: var(--text);
-}
-button { padding: 4px 12px; cursor: pointer; }
-input[type="text"], input[type="date"], select { padding: 4px 8px; }
-button:disabled { color: var(--muted); cursor: not-allowed; }
-
-.success { color: var(--success); }
-.error { color: var(--danger); }
-
-#subject-list { list-style: none; padding-left: 0; }
-#subject-list li { border-bottom: 1px solid var(--border); padding: 6px 0; }
-#subject-list button { margin-left: 8px; }
-
-/* Subject pills: a row of fully rounded buttons. The selected one is the accent. */
-#subject-tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
-#subject-tabs button { border-radius: 999px; padding: 4px 16px; }
-#subject-tabs button.selected { background: var(--accent); border-color: var(--accent); color: var(--surface); font-weight: bold; }
-
-/* Add-project fields: one row that wraps on narrow screens. */
-#project-form fieldset { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; align-items: end; }
-#project-form label { display: block; margin-bottom: 4px; }
-#project-form input { width: 100%; box-sizing: border-box; }   /* fill the grid cell */
-#project-form button { justify-self: start; }                  /* do not stretch the button */
-
-#project-list { list-style: none; padding-left: 0; }
-/* Project cards: one bordered card per project. */
-#project-list li { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px 16px; margin-bottom: 8px; }
-#project-list li > div:first-child { display: flex; align-items: center; gap: 8px; }   /* line 1: name, then the buttons */
-#project-list strong { margin-right: auto; font-size: 1.05rem; }                      /* auto margin pushes the buttons to the right edge */
-
-#project-list li.selected-row { border-left: 4px solid var(--text); padding-left: 12px; background: var(--bg); }
-#project-list li:not(:has(*)) { border: 1px dashed var(--border); background: var(--bg); }   /* empty message stays a quiet dashed box */
-
-#member-form, #task-form div { margin-bottom: 8px; }
-
-#task-list { list-style: none; padding-left: 0; }
-#task-list li { border-bottom: 1px solid var(--border); padding: 6px 0; }
-#task-list select { margin-left: 4px; margin-right: 8px; }
-
-/* My Tasks: overdue rows get a red bar AND the word OVERDUE (not color alone). */
-#mytasks-section label { margin-left: 8px; }
-
-/* Live feedback under a field. */
-.field-feedback { display: block; color: var(--danger); }
-
-/* Make the hidden attribute always win (table cells included). */
-[hidden] { display: none !important; }
-
-/* Sticky message bar: stays at the top of the window while you scroll. */
-#message {
-  position: sticky;
-  top: 0;
-  z-index: 1;
-  background: var(--surface);
-  min-height: 1.5em;          /* keeps its height when empty so the page does not jump */
-  margin: 0 0 16px;
-  padding: 8px 12px;
-  border: 1px solid var(--border);
-  border-left: 4px solid var(--border);
-  border-radius: var(--radius);
-}
-#message.error { border-left-color: var(--danger); }
-#message.success { border-left-color: var(--success); }
-
-/* Add-forms are boxed with a heading. Lists and tables are not boxed. */
-.form-block { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 8px 12px; margin: 0 0 12px; }
-.form-block legend { font-weight: bold; padding: 0 6px; }
-
-/* Tables for the roster and My Tasks. */
-table { background: var(--surface); border-collapse: collapse; width: 100%; margin-top: 8px; }
-th, td { border: 0; border-bottom: 1px solid var(--border); padding: 8px 10px; text-align: left; vertical-align: top; }
-th { background: var(--bg); }
-td button { margin-right: 6px; }
-tr.overdue { background: #fdf0f0; }
-tr.overdue td:first-child { border-left: 4px solid var(--danger); font-weight: bold; }
-
-/* Header: name first, full name smaller and gray (.meta), then the tab strip. */
-header p { margin: 0 0 12px; }
-
-/* Navigation: three quiet chips. */
-#main-nav { display: flex; flex-wrap: wrap; gap: 8px; }
-#main-nav button {
-  font: inherit;               /* buttons do not use the page font unless told to */
-  padding: 6px 14px;
-  background: var(--surface);
-  color: var(--text);
-  border: 1px solid var(--muted);   /* controls keep a darker edge so they still look clickable */
-  border-radius: var(--radius);
-  margin: 0;
-  cursor: pointer;
-}
-#main-nav button.selected { background: var(--accent); border-color: var(--accent); color: var(--surface); font-weight: bold; }
-#main-nav button:disabled { color: var(--muted); border-style: dashed; cursor: not-allowed; }
-
-/* Demo tools footer. */
-footer { border-top: 1px solid var(--border); margin-top: 24px; padding-top: 8px; }
-footer summary { cursor: pointer; }
-
-/* Type scale: three sizes. Secondary info is smaller and gray. */
-h1 { font-size: 1.6rem; margin: 8px 0; }
-h2 { font-size: 1.2rem; margin: 0 0 8px; }
-h3 { font-size: 1rem; }
-.meta { color: var(--muted); font-size: 0.9rem; }
-
-/* Status badges: differ by fill and weight, so they work without color. */
-.badge { display: inline-block; padding: 1px 8px; border: 1px solid var(--muted); border-radius: 4px; font-size: 0.85rem; }
-.badge-to-do, .badge-not-started { background: var(--surface); color: var(--text); }
-.badge-doing, .badge-ongoing { background: var(--border); color: var(--text); font-weight: bold; }
-.badge-done, .badge-completed { background: var(--text); color: var(--surface); }
-
-/* Overdue task in the project task list. */
-#task-list li.overdue-row { border-left: 4px solid var(--danger); padding-left: 8px; background: #fdf0f0; }
-
-/* Primary action: the four Add buttons and the Open buttons use the accent. */
-button[type="submit"], .btn-primary {
-  background: var(--accent);
-  color: var(--surface);
-  border-color: var(--accent);
-}
-
-/* Consistent spacing: every section title has the same gap before its content. */
-section h2 { margin: 0 0 12px; }
-section p { margin: 0 0 8px; }
-
-/* Lists sit a clear step below the form above them. */
-#subject-list, #project-list, #task-list { margin: 12px 0 0; }
-
-/* Empty messages: a quiet dashed box. An empty-state row is an <li> with no element inside it. */
-li:not(:has(*)) { color: var(--muted); background: var(--bg); border: 1px dashed var(--border); border-radius: var(--radius); padding: 12px 16px; }
-td[colspan] { color: var(--muted); padding: 16px 10px; }   /* "No tasks found." cell in a table */
-
-/* An empty message bar should not show as a white strip on the gray page. */
-#message:empty { background: transparent; border-color: transparent; }
-
-/* Workspace polish */
-body {
-  max-width: 1120px;
-  padding: clamp(16px, 3vw, 36px);
-  color: #172033;
-  background:
-    radial-gradient(ellipse at 12% 0%, rgba(11, 92, 173, 0.07), transparent 34rem),
-    #f3f5f9;
-  line-height: 1.6;
-}
-
-header, section {
-  border-color: #e4e8f0;
-  border-radius: 14px;
-  box-shadow: 0 8px 24px rgba(27, 39, 61, 0.045);
 }
 
 header {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
-  gap: 8px 24px;
-  padding: 22px 26px;
-  background: linear-gradient(115deg, #fff 58%, #f5f8ff);
+  gap: 4px 24px;
+  margin-bottom: 12px;
+  padding: 16px 20px;
 }
 
 header h1 {
   margin: 0;
-  color: #173c70;
-  font-size: clamp(1.65rem, 3vw, 2rem);
-  letter-spacing: 0.09em;
-  line-height: 1.2;
+  color: var(--text);
+  font-size: 1.4rem;
+  font-weight: 700;
+  letter-spacing: 0.015em;
+  line-height: 1.25;
 }
 
 header p {
   grid-column: 1;
   grid-row: 2;
   margin: 0;
-  color: #657084;
-  font-size: 0.9rem;
+  color: var(--muted);
+  font-size: 0.86rem;
 }
 
 #main-nav {
+  display: flex;
+  flex-wrap: wrap;
   grid-column: 2;
   grid-row: 1 / span 2;
-  align-self: center;
+  gap: 4px;
   padding: 4px;
-  border: 1px solid #e7eaf0;
-  border-radius: 10px;
-  background: #f5f6f9;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface-soft);
 }
 
 #main-nav button {
-  border-color: transparent;
-  border-radius: 7px;
-  padding: 8px 14px;
-  color: #536075;
-  transition: background-color 140ms ease, color 140ms ease, box-shadow 140ms ease;
+  min-height: 34px;
+  padding: 6px 12px;
+  border: 1px solid transparent;
+  border-radius: 5px;
+  background: transparent;
+  color: var(--muted);
+  font: inherit;
+  cursor: pointer;
 }
 
 #main-nav button:hover:not(:disabled):not(.selected) {
+  background: var(--surface);
   color: var(--text);
-  background: #fff;
 }
 
 #main-nav button.selected {
+  border-color: var(--border);
   background: var(--surface);
-  border-color: #e5e9f2;
-  color: var(--accent);
-  box-shadow: 0 2px 6px rgba(27, 39, 61, 0.08);
+  color: var(--text);
+  font-weight: 600;
+}
+
+#main-nav button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+section {
+  margin-bottom: 12px;
+  padding: 20px;
+}
+
+section h2 {
+  margin: 0 0 12px;
+  color: var(--text);
+  font-size: 1.05rem;
+  font-weight: 650;
+  line-height: 1.35;
+}
+
+section p {
+  margin: 0 0 8px;
+  color: var(--muted);
 }
 
 #acting-as-section {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 8px 14px;
-  padding: 12px 18px;
-  background: #edf4ff;
-  border-color: #dce8f8;
-  box-shadow: none;
+  gap: 8px 12px;
+  margin-bottom: 12px;
+  padding: 12px 16px;
+  background: var(--surface-soft);
 }
 
 #acting-as-section h2 {
   margin: 0 4px 0 0;
-  color: #244b7d;
   font-size: 0.9rem;
 }
 
-#acting-as-section label {
-  color: #52647d;
-  font-size: 0.9rem;
+#acting-as-section label,
+#member-form label,
+#task-form label,
+#project-form label,
+#subject-form label,
+#mytasks-section label {
+  color: #55595f;
+  font-size: 0.84rem;
+  font-weight: 550;
 }
 
-#acting-as-section select {
-  min-width: 170px;
-}
-
-#acting-as-status, #role-note {
+#acting-as-section p {
   margin: 0;
-  color: #5d6e84;
-  font-size: 0.82rem;
+  color: var(--muted);
+  font-size: 0.8rem;
 }
 
 #acting-as-status {
-  flex: 1 1 320px;
+  flex: 1 1 240px;
   min-width: 0;
-  font-weight: 600;
+  font-weight: 550;
 }
 
-section {
-  padding: clamp(18px, 3vw, 26px);
-  margin-bottom: 18px;
-}
-
-section h2 {
-  color: #1d2b42;
-  font-size: 1.2rem;
-  letter-spacing: -0.015em;
-}
-
-section p {
-  color: #647084;
-}
-
-button, input[type="text"], input[type="date"], select {
-  min-height: 38px;
-  border-color: #d5dbe6;
-  border-radius: 8px;
-  transition: border-color 140ms ease, box-shadow 140ms ease, background-color 140ms ease;
+button,
+input[type="text"],
+input[type="number"],
+input[type="date"],
+select {
+  min-height: 34px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-control);
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+  font-size: 0.86rem;
 }
 
 button {
-  padding: 7px 13px;
-  color: #344158;
-  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 6px 11px;
+  cursor: pointer;
+  font-weight: 550;
+}
+
+.ui-icon {
+  display: block;
+  width: 16px;
+  height: 16px;
+  flex: 0 0 16px;
+  color: currentColor;
+  pointer-events: none;
+}
+
+#main-nav button {
+  gap: 7px;
+}
+
+#main-nav .ui-icon {
+  width: 15px;
+  height: 15px;
+  flex-basis: 15px;
 }
 
 button:hover:not(:disabled) {
-  border-color: #aebbd0;
-  background-color: #f8faff;
+  border-color: #b7bbc0;
+  background-color: #f8f8f9;
 }
 
-button[type="submit"], .btn-primary {
-  background: var(--accent);
+button:disabled {
+  color: var(--muted);
+  cursor: not-allowed;
+}
+
+button[type="submit"],
+.btn-primary {
   border-color: var(--accent);
+  background: var(--accent);
   color: #fff;
 }
 
-button[type="submit"]:hover:not(:disabled), .btn-primary:hover:not(:disabled) {
-  background: #084b90;
-  border-color: #084b90;
-  box-shadow: 0 3px 8px rgba(11, 92, 173, 0.2);
+button[type="submit"]:hover:not(:disabled),
+.btn-primary:hover:not(:disabled) {
+  border-color: #111315;
+  background: #111315;
 }
 
-input[type="text"], input[type="date"], select {
-  padding: 7px 10px;
+input[type="text"],
+input[type="number"],
+input[type="date"],
+select {
+  padding: 6px 9px;
+}
+
+input[type="text"] {
+  min-width: 0;
 }
 
 input::placeholder {
-  color: #929bad;
+  color: #92969b;
 }
 
-input:focus-visible, select:focus-visible, button:focus-visible {
-  outline: 3px solid rgba(11, 92, 173, 0.22);
-  outline-offset: 1px;
-  border-color: var(--accent);
+:focus-visible {
+  outline: 2px solid #63676c;
+  outline-offset: 2px;
 }
 
 .form-block {
-  padding: 18px;
-  border-color: #e5e9f0;
-  border-radius: 11px;
-  background: #f8f9fc;
+  margin: 0 0 12px;
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  background: var(--surface-soft);
 }
 
 .form-block legend {
-  color: #36445b;
-  font-size: 0.88rem;
+  padding: 0 4px;
+  color: #4a4e53;
+  font-size: 0.82rem;
+  font-weight: 650;
 }
 
 #subject-form .form-block {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: auto minmax(160px, 320px) auto;
   align-items: center;
-  gap: 10px;
+  justify-content: start;
+  gap: 8px 12px;
 }
 
-#subject-form .form-block legend {
-  flex-basis: 100%;
+#subject-form .form-block legend,
+#task-form .form-block legend,
+#project-form .form-block legend {
+  grid-column: 1 / -1;
 }
 
 #subject-form input {
-  box-sizing: border-box;
-  flex: 0 1 320px;
-}
-
-#subject-form label, #project-form label, #task-form label, #member-form label {
-  color: #566278;
-  font-size: 0.88rem;
-  font-weight: 600;
+  width: 100%;
 }
 
 #subject-tabs {
-  gap: 9px;
-  margin: 0 0 14px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 12px;
 }
 
 #subject-tabs button {
-  min-height: 40px;
-  padding: 7px 17px;
-  border-color: #dce2ec;
-  background: #fff;
-  color: #46546b;
+  min-height: 34px;
+  padding: 5px 13px;
+  border-color: var(--border);
+  border-radius: 6px;
+  background: var(--surface);
+  color: #55595f;
 }
 
 #subject-tabs button.selected {
-  background: #173c70;
-  border-color: #173c70;
+  border-color: var(--accent);
+  background: var(--accent);
   color: #fff;
+  font-weight: 600;
+}
+
+#subject-list,
+#project-list,
+#task-list {
+  margin: 12px 0 0;
+  padding: 0;
+  list-style: none;
 }
 
 #subject-list li {
   display: flex;
+  min-height: 40px;
   align-items: center;
-  min-height: 44px;
-  padding: 8px 12px;
-  color: #536075;
-  border: 1px solid #e5e9f0;
-  border-radius: 9px;
-  background: #fff;
+  padding: 6px 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  background: var(--surface);
 }
 
 #subject-list li span {
   margin-right: auto;
-  color: #344158;
-  font-weight: 600;
+  color: #484c51;
+  font-weight: 550;
 }
 
 #subject-list li button {
-  margin-left: 8px;
+  margin-left: 6px;
 }
 
 #project-form .form-block {
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr));
   align-items: end;
+  gap: 10px 12px;
+}
+
+#project-form label {
+  display: block;
+  margin-bottom: 4px;
+}
+
+#project-form input {
+  width: 100%;
+}
+
+#project-form button {
+  justify-self: start;
 }
 
 #project-list {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
-  gap: 12px;
+  gap: 8px;
 }
 
 #project-list li {
   display: grid;
-  gap: 8px;
+  gap: 6px;
   margin: 0;
-  padding: 16px;
-  border-color: #e4e8f0;
-  border-radius: 11px;
-  box-shadow: 0 2px 8px rgba(27, 39, 61, 0.035);
-  transition: border-color 140ms ease, transform 140ms ease, box-shadow 140ms ease;
-}
-
-#project-list li:hover {
-  border-color: #c8d5e8;
-  box-shadow: 0 6px 16px rgba(27, 39, 61, 0.07);
-  transform: translateY(-1px);
-}
-
-#project-list li.selected-row {
-  padding-left: 12px;
-  border-color: #b7ccec;
-  border-left: 4px solid var(--accent);
-  background: #f7faff;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  background: var(--surface);
 }
 
 #project-list li > div:first-child {
+  display: flex;
+  align-items: center;
   gap: 8px;
 }
 
 #project-list strong {
-  color: #24334b;
+  margin-right: auto;
+  color: #303337;
+  font-size: 0.96rem;
+  font-weight: 620;
 }
 
-.meta {
-  color: #68758a;
-  font-size: 0.84rem;
+#project-list li.selected-row {
+  border-color: #bfc2c6;
+  border-left: 3px solid #55595f;
+  padding-left: 10px;
+  background: #fafafa;
 }
 
-#project-list .badge, #project-list select {
+#project-list .badge,
+#project-list select {
   margin-left: 4px;
 }
 
-#roster-section, #tasks-section {
-  overflow: hidden;
-}
-
-table {
-  overflow: hidden;
-  border: 1px solid #e4e8f0;
-  border-radius: 10px;
-}
-
-th, td {
-  padding: 11px 13px;
-  border-bottom-color: #edf0f5;
-}
-
-th {
-  color: #526078;
-  background: #f6f8fb;
+.meta {
+  color: var(--muted);
   font-size: 0.8rem;
-  font-weight: 700;
-  letter-spacing: 0.035em;
-  text-transform: uppercase;
 }
 
-tbody tr:last-child td {
-  border-bottom: 0;
+#project-list li:not(:has(*)),
+#task-list li:not(:has(*)) {
+  display: block;
+  padding: 12px;
+  border: 1px dashed var(--border-strong);
+  background: var(--surface-soft);
+  color: var(--muted);
 }
 
-tbody tr:hover:not(.overdue) {
-  background: #f8faff;
+#member-form .form-block {
+  display: grid;
+  grid-template-columns: auto minmax(160px, 320px) auto;
+  align-items: center;
+  justify-content: start;
+  gap: 8px 12px;
 }
 
-tr.overdue {
-  background: #fff3f2;
-}
-
-tr.overdue td:first-child {
-  border-left-color: #dc5555;
+#member-form .form-block legend {
+  grid-column: 1 / -1;
 }
 
 #task-form .form-block {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 160px), 1fr));
   align-items: end;
-  gap: 12px;
-}
-
-#task-form .form-block legend {
-  grid-column: 1 / -1;
+  gap: 10px 12px;
 }
 
 #task-form .form-block > div {
+  min-width: 0;
   margin: 0;
 }
 
 #task-form label {
   display: block;
-  margin-bottom: 5px;
+  margin-bottom: 4px;
 }
 
-#task-form input, #task-form select {
-  box-sizing: border-box;
+#task-form input,
+#task-form select {
   width: 100%;
 }
 
-#member-form .form-block {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 10px;
+#task-status-filter,
+#mytasks-subject,
+#mytasks-status {
+  min-width: 120px;
 }
 
-#member-form .form-block legend {
-  flex-basis: 100%;
-}
-
-#task-status-filter, #mytasks-subject, #mytasks-status {
-  min-width: 130px;
-}
-
-#task-count, #mytasks-count {
-  margin-top: 12px;
-  color: #647084;
-  font-size: 0.86rem;
+#task-count,
+#mytasks-count {
+  margin-top: 8px;
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-variant-numeric: tabular-nums;
 }
 
 #task-list li {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 8px 12px;
-  padding: 13px 14px;
-  border: 1px solid #e6eaf1;
-  border-radius: 9px;
-  background: #fff;
+  gap: 8px 10px;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  background: var(--surface);
 }
 
 #task-list li + li {
@@ -580,37 +470,38 @@ tr.overdue td:first-child {
 }
 
 #task-list li strong {
-  color: #2c3a52;
+  color: #303337;
+  font-weight: 620;
 }
 
 #task-list li > span:not(.leader-only) {
-  color: #68758a;
-  font-size: 0.87rem;
+  color: var(--muted);
+  font-size: 0.82rem;
 }
 
-#task-list li select {
-  margin: 0;
+#task-list select {
+  min-height: 30px;
 }
 
 #task-list li.overdue-row {
-  padding-left: 10px;
-  border: 1px solid #f3cccc;
-  border-left: 4px solid var(--danger);
-  border-radius: 9px;
-  background: #fff4f3;
+  padding-left: 9px;
+  border-color: #edcccc;
+  border-left: 3px solid #bd5b5b;
+  background: #fff8f7;
 }
 
 #mytasks-section details {
-  margin: 14px 0;
-  padding: 12px 14px;
-  border: 1px solid #e5e9f0;
-  border-radius: 9px;
-  background: #f8f9fc;
+  margin: 12px 0;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  background: var(--surface-soft);
 }
 
 #mytasks-section summary {
-  color: #40506a;
-  font-weight: 700;
+  color: #484c51;
+  font-size: 0.86rem;
+  font-weight: 600;
   cursor: pointer;
 }
 
@@ -618,117 +509,317 @@ tr.overdue td:first-child {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 10px;
-  margin-top: 12px;
+  gap: 8px;
+  margin-top: 10px;
 }
 
 #mytasks-section label {
-  margin: 0 0 0 4px;
-  color: #566278;
-  font-size: 0.86rem;
+  margin-left: 4px;
+}
+
+table {
+  width: 100%;
+  margin-top: 8px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  border-spacing: 0;
+  background: var(--surface);
+  text-align: left;
+}
+
+th,
+td {
+  padding: 9px 11px;
+  border-bottom: 1px solid #eceef0;
+  text-align: left;
+  vertical-align: top;
+}
+
+th {
+  background: var(--surface-soft);
+  color: #55595f;
+  font-size: 0.78rem;
+  font-weight: 620;
+}
+
+tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+tbody tr:hover:not(.overdue) {
+  background: #fafafa;
+}
+
+td button {
+  margin-right: 4px;
+}
+
+tr.overdue {
+  background: #fff4f3;
+}
+
+tr.overdue td:first-child {
+  border-left: 3px solid #bd5b5b;
   font-weight: 600;
 }
 
 .badge {
-  padding: 3px 9px;
-  border-color: #dce2ec;
-  border-radius: 999px;
+  display: inline-block;
+  padding: 2px 8px;
+  border: 1px solid var(--border);
+  border-radius: 5px;
   font-size: 0.78rem;
-  font-weight: 600;
+  line-height: 1.4;
 }
 
-.badge-to-do, .badge-not-started {
-  background: #f3f5f8;
-  color: #536075;
+.badge-to-do,
+.badge-not-started {
+  background: #f2f3f4;
+  color: #55595f;
 }
 
-.badge-doing, .badge-ongoing {
-  border-color: #c9dcf5;
-  background: #edf5ff;
-  color: #24558e;
+.badge-doing,
+.badge-ongoing {
+  border-color: #d8e1eb;
+  background: #f0f4f8;
+  color: #43586b;
 }
 
-.badge-done, .badge-completed {
-  border-color: #cce8d6;
-  background: #edf8f0;
-  color: #24633b;
+.badge-done,
+.badge-completed {
+  border-color: #d4e2d8;
+  background: #f0f5f1;
+  color: #3e6049;
 }
 
 .field-feedback {
+  display: block;
   margin-top: 4px;
-  font-size: 0.8rem;
+  color: var(--danger);
+  font-size: 0.78rem;
+}
+
+.success {
+  color: var(--success);
+}
+
+.error {
+  color: var(--danger);
 }
 
 #message {
-  border-radius: 9px;
-  background: #fff;
-  box-shadow: 0 4px 14px rgba(27, 39, 61, 0.04);
+  position: sticky;
+  z-index: 1;
+  top: 8px;
+  margin: 0 0 12px;
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--border-strong);
+  border-radius: var(--radius-control);
+  background: var(--surface);
+  color: var(--text);
+}
+
+#message.error {
+  border-left-color: var(--danger);
+}
+
+#message.success {
+  border-left-color: var(--success);
 }
 
 #message:empty {
   display: none;
 }
 
+dialog#app-dialog {
+  width: min(440px, calc(100% - 32px));
+  max-width: 440px;
+  max-height: calc(100% - 32px);
+  margin: auto;
+  padding: 24px;
+  overflow: auto;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-panel);
+  background: var(--surface);
+  color: var(--text);
+  box-shadow: 0 16px 48px rgba(25, 27, 29, 0.18);
+}
+
+dialog#app-dialog::backdrop {
+  background: rgba(32, 34, 36, 0.42);
+}
+
+.app-dialog__eyebrow {
+  margin-bottom: 8px;
+  color: var(--muted);
+  font-size: 0.76rem;
+  font-weight: 600;
+}
+
+#app-dialog-title {
+  margin: 0 0 8px;
+  color: var(--text);
+  font-size: 1.15rem;
+  font-weight: 650;
+}
+
+#app-dialog-message {
+  margin: 0;
+  color: #55595f;
+  overflow-wrap: anywhere;
+}
+
+#app-dialog-input-group {
+  display: grid;
+  gap: 6px;
+  margin-top: 16px;
+}
+
+#app-dialog-input-group label {
+  color: #55595f;
+  font-size: 0.84rem;
+  font-weight: 550;
+}
+
+#app-dialog-input {
+  width: 100%;
+}
+
+.app-dialog__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 20px;
+}
+
+#app-dialog-cancel {
+  background: var(--surface);
+}
+
+#app-dialog-confirm {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: #fff;
+}
+
+#app-dialog-confirm:hover:not(:disabled) {
+  border-color: #111315;
+  background: #111315;
+}
+
+#app-dialog-confirm.app-dialog__confirm--danger {
+  border-color: var(--danger);
+  background: var(--danger);
+  color: #fff;
+}
+
+#app-dialog-confirm.app-dialog__confirm--danger:hover:not(:disabled) {
+  border-color: #873030;
+  background: #873030;
+}
+
+#app-dialog-confirm:disabled {
+  border-color: var(--border-strong);
+  background: #e8e9eb;
+  color: #73777d;
+  cursor: not-allowed;
+}
+
+td[colspan] {
+  padding: 14px 10px;
+  color: var(--muted);
+}
+
+[hidden] {
+  display: none !important;
+}
+
 footer {
-  color: #68758a;
-  border-color: #e2e7ef;
+  margin-top: 20px;
+  padding-top: 8px;
+  border-top: 1px solid var(--border);
+  color: var(--muted);
 }
 
 footer summary {
-  padding: 6px 0;
-  font-size: 0.86rem;
+  padding: 4px 0;
+  font-size: 0.82rem;
+  cursor: pointer;
 }
 
 @media (max-width: 680px) {
   body {
-    padding: 14px;
+    padding: 12px;
   }
 
   header {
     grid-template-columns: 1fr;
-    gap: 12px;
-    padding: 20px;
+    gap: 8px;
+    padding: 14px;
   }
 
-  header p, #main-nav {
+  header p,
+  #main-nav {
     grid-column: 1;
     grid-row: auto;
   }
 
   #main-nav {
-    justify-self: stretch;
     overflow-x: auto;
   }
 
   #main-nav button {
     flex: 1 0 auto;
-    padding: 8px 10px;
+    padding-inline: 9px;
+  }
+
+  section {
+    padding: 16px;
   }
 
   #acting-as-section {
     align-items: flex-start;
   }
 
-  #acting-as-section h2 {
-    flex-basis: 100%;
-  }
-
+  #acting-as-section h2,
   #role-note {
     flex-basis: 100%;
   }
 
-  #subject-form .form-block {
-    flex-direction: column;
-    align-items: stretch;
+  #subject-form .form-block,
+  #member-form .form-block {
+    grid-template-columns: 1fr;
+    justify-content: stretch;
   }
 
-  #subject-form .form-block legend {
-    flex-basis: auto;
+  #subject-form .form-block legend,
+  #member-form .form-block legend {
+    grid-column: 1;
   }
 
-  #subject-form label, #subject-form input, #subject-form button {
+  #subject-form label,
+  #subject-form input,
+  #subject-form button,
+  #member-form label,
+  #member-form input,
+  #member-form button {
     width: 100%;
-    box-sizing: border-box;
+  }
+
+  #project-form .form-block,
+  #task-form .form-block {
+    grid-template-columns: 1fr;
+  }
+
+  #project-form .form-block legend,
+  #task-form .form-block legend {
+    grid-column: 1;
+  }
+
+  #project-form button {
+    width: 100%;
   }
 
   #subject-list li {
@@ -752,7 +843,9 @@ footer summary {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
+  *,
+  *::before,
+  *::after {
     scroll-behavior: auto !important;
     transition-duration: 0.01ms !important;
     animation-duration: 0.01ms !important;

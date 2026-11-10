@@ -21,8 +21,12 @@ function createSubjectRow(subject) {
   const nameText = document.createElement("span");
   nameText.textContent = "Selected subject: " + subject.name;   // textContent = plain text, never HTML
   row.appendChild(nameText);
-  row.appendChild(makeButton("Rename", function () { renameSubject(subject.id); }));
-  row.appendChild(makeButton("Delete", function () { deleteSubject(subject.id); }));
+  const renameButton = makeButton("Rename", function () { renameSubject(subject.id); }, "edit");
+  renameButton.className = "leader-only";
+  row.appendChild(renameButton);
+  const deleteButton = makeButton("Delete", function () { deleteSubject(subject.id); }, "trash");
+  deleteButton.className = "leader-only";
+  row.appendChild(deleteButton);
   return row;
 }
 
@@ -70,6 +74,11 @@ function selectSubject(subjectId) {
 function addSubject(event) {
   event.preventDefault();   // stops the browser from reloading the page
 
+  if (!canManageSubjects()) {
+    showMessage("Only the active project Leader can add subjects.", true);
+    return;
+  }
+
   const input = document.getElementById("subject-name");
   const name = input.value.trim();
 
@@ -91,9 +100,20 @@ function addSubject(event) {
 }
 
 // Runs when Rename is clicked.
-function renameSubject(subjectId) {
+async function renameSubject(subjectId) {
+  if (!isActiveLeader()) {
+    showMessage("Only the active project Leader can rename subjects.", true);
+    return;
+  }
+
   const subject = findSubject(subjectId);
-  const answer = prompt("New name for this subject:", subject.name);
+  const answer = await showPromptDialog({
+    title: "Rename subject",
+    message: "Enter a new name for " + subject.name + ".",
+    inputLabel: "Subject name",
+    initialValue: subject.name,
+    confirmLabel: "Save"
+  });
   if (answer === null) {
     return;   // Cancel: change nothing
   }
@@ -112,9 +132,19 @@ function renameSubject(subjectId) {
 }
 
 // Runs when Delete is clicked. Also deletes everything under the subject.
-function deleteSubject(subjectId) {
+async function deleteSubject(subjectId) {
+  if (!isActiveLeader()) {
+    showMessage("Only the active project Leader can delete subjects.", true);
+    return;
+  }
+
   const subject = findSubject(subjectId);
-  const sure = confirm('Delete "' + subject.name + '"? Its projects, members, and tasks will also be deleted.');
+  const sure = await showConfirmDialog({
+    title: "Delete subject?",
+    message: 'Delete "' + subject.name + '"? Its projects, members, and tasks will also be deleted.',
+    confirmLabel: "Delete subject",
+    destructive: true
+  });
   if (!sure) {
     return;
   }

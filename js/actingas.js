@@ -7,6 +7,11 @@ function isActiveLeader() {
   return person !== undefined && person.role === "Leader";
 }
 
+// A new workspace needs an initial subject before it can have a project Leader.
+function canManageSubjects() {
+  return isActiveLeader() || members.length === 0;
+}
+
 // Keeps activePerson valid. Call it after anything that can remove people or switch projects.
 function fixActivePerson() {
   // 1. A saved person who no longer exists is forgotten.
@@ -56,6 +61,9 @@ function applyRoleView() {
   for (let i = 0; i < controls.length; i++) {
     controls[i].hidden = !isLeader;
   }
+
+  document.getElementById("subject-form").hidden = !canManageSubjects();
+  document.getElementById("project-form").hidden = selectedSubjectId === null;
 
   const status = document.getElementById("acting-as-status");
   const person = findMember(activePerson);

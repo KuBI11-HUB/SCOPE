@@ -31,10 +31,10 @@ function createProjectRow(project) {
   const nameText = document.createElement("strong");
   nameText.textContent = project.name;
   line1.appendChild(nameText);
-  const openButton = makeButton("Open", function () { selectProject(project.id); });
+  const openButton = makeButton("Open", function () { selectProject(project.id); }, "open");
   openButton.className = "btn-primary";   // CSS hook only: styles Open as the primary button
   line1.appendChild(openButton);
-  line1.appendChild(makeButton("Delete", function () { deleteProject(project.id); }));
+  line1.appendChild(makeButton("Delete", function () { deleteProject(project.id); }, "trash"));
 
   // Line 2 (smaller, gray): due date, leader, status.
   const line2 = document.createElement("div");
@@ -140,9 +140,14 @@ function addProject(event) {
 }
 
 // Runs when a project's Delete is clicked. Also deletes its tasks and members.
-function deleteProject(projectId) {
+async function deleteProject(projectId) {
   const project = findProject(projectId);
-  const sure = confirm('Delete "' + project.name + '"? Its members and tasks will also be deleted.');
+  const sure = await showConfirmDialog({
+    title: "Delete project?",
+    message: 'Delete "' + project.name + '"? Its members and tasks will also be deleted.',
+    confirmLabel: "Delete project",
+    destructive: true
+  });
   if (!sure) {
     return;
   }

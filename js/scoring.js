@@ -24,21 +24,32 @@ function addScoreControls(row, task) {
   if (canScore(task)) {
     const button = makeButton(task.score === null ? "Score" : "Edit Score", function () {
       scoreTask(task.id);
-    });
+    }, task.score === null ? "score" : "edit");
     button.className = "leader-only";
     row.appendChild(button);
   }
 }
 
 // Runs when Score / Edit Score is clicked. Two prompts: the score, then the comment.
-function scoreTask(taskId) {
+async function scoreTask(taskId) {
   const task = tasks.find(t => t.id === taskId);
   if (!canScore(task)) {   // the button is hidden otherwise, but the rule is checked again
     showMessage("Only the Leader can score a Done task that belongs to someone else.", true);
     return;
   }
 
-  const scoreAnswer = prompt('Score for "' + task.title + '" (whole number 1 to 10):', task.score === null ? "" : task.score);
+  const scoreAnswer = await showPromptDialog({
+    title: "Score task",
+    message: task.title,
+    inputLabel: "Score (whole number from 1 to 10)",
+    initialValue: task.score === null ? "" : task.score,
+    inputType: "number",
+    inputMode: "numeric",
+    min: 1,
+    max: 10,
+    step: 1,
+    confirmLabel: "Continue"
+  });
   if (scoreAnswer === null) {
     return;
   }
@@ -48,7 +59,13 @@ function scoreTask(taskId) {
     return;
   }
 
-  const commentAnswer = prompt("Comment (optional, up to 100 characters):", task.comment);
+  const commentAnswer = await showPromptDialog({
+    title: "Add a comment",
+    message: "Optional feedback for " + task.title + ".",
+    inputLabel: "Comment (up to 100 characters)",
+    initialValue: task.comment,
+    confirmLabel: "Save score"
+  });
   if (commentAnswer === null) {
     return;
   }

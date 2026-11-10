@@ -19,6 +19,7 @@ function renderAll() {
 // When the page is ready: load saved data, draw it, attach every listener.
 document.addEventListener("DOMContentLoaded", function () {
   loadData();
+  initializeButtonIcons();
   fixActivePerson();   // forget a saved person who no longer exists
   if (subjects.length > 0) {
     selectedSubjectId = subjects[0].id;
@@ -43,11 +44,18 @@ document.addEventListener("DOMContentLoaded", function () {
   document.getElementById("nav-mytasks").addEventListener("click", function () { showView("mytasks"); });
 });
 
-function resetData() {
-  const answer = prompt("This deletes " + subjects.length + " subjects, " + projects.length +
-    " projects, " + members.length + " members and " + tasks.length +
-    " tasks. Type RESET to confirm:");
-  if (answer === null || answer.trim() !== "RESET") {
+async function resetData() {
+  const sure = await showConfirmDialog({
+    title: "Reset all data?",
+    message: "This deletes " + subjects.length + " subjects, " + projects.length +
+      " projects, " + members.length + " members and " + tasks.length +
+      " tasks. This cannot be undone.",
+    confirmLabel: "Reset data",
+    destructive: true,
+    inputLabel: "Type RESET to confirm",
+    expectedValue: "RESET"
+  });
+  if (!sure) {
     return;
   }
 

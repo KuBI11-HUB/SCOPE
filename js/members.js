@@ -32,9 +32,9 @@ function createMemberRow(member) {
   actions.className = "leader-only";   // applyRoleView() hides this cell (and its header) for Members
   // Only Member rows get Make Leader. The Leader is already the Leader.
   if (member.role === "Member") {
-    actions.appendChild(makeButton("Make Leader", function () { makeLeader(member.id); }));
+    actions.appendChild(makeButton("Make Leader", function () { makeLeader(member.id); }, "leader"));
   }
-  actions.appendChild(makeButton("Remove", function () { removeMember(member.id); }));
+  actions.appendChild(makeButton("Remove", function () { removeMember(member.id); }, "trash"));
   row.appendChild(actions);
   return row;
 }
@@ -93,7 +93,7 @@ function addMember(event) {
 }
 
 // Runs when Make Leader is clicked.
-function makeLeader(memberId) {
+async function makeLeader(memberId) {
   if (!isActiveLeader()) {
     showMessage("Only the Leader can change the Leader.", true);
     return;
@@ -103,7 +103,11 @@ function makeLeader(memberId) {
   const newLeader = findMember(memberId);
   const oldLeader = findMember(project.leaderId);
 
-  const sure = confirm("Make " + newLeader.name + " the Leader? " + oldLeader.name + " will become a Member.");
+  const sure = await showConfirmDialog({
+    title: "Change project leader?",
+    message: "Make " + newLeader.name + " the Leader? " + oldLeader.name + " will become a Member.",
+    confirmLabel: "Make leader"
+  });
   if (!sure) {
     return;
   }
@@ -124,7 +128,7 @@ function makeLeader(memberId) {
 }
 
 // Runs when Remove is clicked.
-function removeMember(memberId) {
+async function removeMember(memberId) {
   if (!isActiveLeader()) {
     showMessage("Only the Leader can remove members.", true);
     return;
@@ -144,7 +148,13 @@ function removeMember(memberId) {
     return;
   }
 
-  if (!confirm("Remove " + member.name + " from this project?")) {
+  const sure = await showConfirmDialog({
+    title: "Remove member?",
+    message: "Remove " + member.name + " from this project?",
+    confirmLabel: "Remove member",
+    destructive: true
+  });
+  if (!sure) {
     return;
   }
 
