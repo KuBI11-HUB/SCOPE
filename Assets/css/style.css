@@ -1,60 +1,98 @@
+/* Tokens: the only place colors and the corner size are written. Everything below uses var(--name). */
+:root {
+  --bg: #f4f5f7;        /* the page itself, form insets, and table header cells */
+  --surface: #ffffff;   /* white panels: header, sections, tables; also text on dark fills */
+  --text: #1a1a1a;      /* main text and dark fills */
+  --muted: #5c5c5c;     /* secondary text, empty messages, and the edge of buttons and badges */
+  --border: #e5e7eb;    /* light panel edges, row lines, and the Doing badge fill */
+  --accent: #0b5cad;    /* institutional blue: selected nav chip, focus outline, Add buttons only */
+  --success: #14532d;   /* success messages */
+  --danger: #a40000;    /* errors and the overdue bar */
+  --radius: 8px;        /* small corner rounding for panels and chips */
+}
+
 body {
   font-family: Verdana, Tahoma, sans-serif;
   max-width: 960px;
   margin: 0 auto;
   padding: 16px;
-  color: #1a1a1a;
-  background: #ffffff;
+  color: var(--text);
+  background: var(--bg);
   line-height: 1.5;
 }
 
 header {
-  border-bottom: 2px solid #1a1a1a;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 12px 16px;
   margin-bottom: 16px;
 }
 
 section {
-  border: 0;
-  border-top: 2px solid #1a1a1a;
-  padding: 16px 0;
-  margin-bottom: 8px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-bottom: 16px;
 }
 
 :focus-visible {
-  outline: 3px solid #0b5cad;
+  outline: 3px solid var(--accent);
   outline-offset: 2px;
 }
 
-.success { color: #14532d; }
-.error { color: #a40000; }
+/* Controls: one quiet look for every button and field. */
+button, input[type="text"], input[type="date"], select {
+  font: inherit;
+  font-size: 0.9rem;
+  border: 1px solid var(--muted);   /* controls keep a darker edge so they look clickable */
+  border-radius: 6px;
+  background: var(--surface);
+  color: var(--text);
+}
+button { padding: 4px 12px; cursor: pointer; }
+input[type="text"], input[type="date"], select { padding: 4px 8px; }
+button:disabled { color: var(--muted); cursor: not-allowed; }
+
+.success { color: var(--success); }
+.error { color: var(--danger); }
 
 #subject-list { list-style: none; padding-left: 0; }
-#subject-list li { border-bottom: 1px solid #cccccc; padding: 6px 0; }
+#subject-list li { border-bottom: 1px solid var(--border); padding: 6px 0; }
 #subject-list button { margin-left: 8px; }
 
-#subject-tabs button { margin-right: 6px; margin-bottom: 8px; }
-#subject-tabs button.selected { background: #1a1a1a; color: #ffffff; }
+/* Subject pills: a row of fully rounded buttons. The selected one is the accent. */
+#subject-tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+#subject-tabs button { border-radius: 999px; padding: 4px 16px; }
+#subject-tabs button.selected { background: var(--accent); border-color: var(--accent); color: var(--surface); font-weight: bold; }
 
-#project-form div { margin-bottom: 8px; }
+/* Add-project fields: one row that wraps on narrow screens. */
+#project-form fieldset { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; align-items: end; }
+#project-form label { display: block; margin-bottom: 4px; }
+#project-form input { width: 100%; box-sizing: border-box; }   /* fill the grid cell */
+#project-form button { justify-self: start; }                  /* do not stretch the button */
 
 #project-list { list-style: none; padding-left: 0; }
-#project-list li { border-bottom: 1px solid #cccccc; padding: 6px 0; }
-#project-list button { margin-left: 8px; }
+/* Project cards: one bordered card per project. */
+#project-list li { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px 16px; margin-bottom: 8px; }
+#project-list li > div:first-child { display: flex; align-items: center; gap: 8px; }   /* line 1: name, then the buttons */
+#project-list strong { margin-right: auto; font-size: 1.05rem; }                      /* auto margin pushes the buttons to the right edge */
 
-#project-list li.selected-row { border-left: 4px solid #1a1a1a; padding-left: 8px; background: #f0f0f0; }
+#project-list li.selected-row { border-left: 4px solid var(--text); padding-left: 12px; background: var(--bg); }
+#project-list li:not(:has(*)) { border: 1px dashed var(--border); background: var(--bg); }   /* empty message stays a quiet dashed box */
 
-#project-detail, #task-detail { margin-top: 16px; border-top: 1px solid #888888; padding-top: 8px; }
 #member-form, #task-form div { margin-bottom: 8px; }
 
 #task-list { list-style: none; padding-left: 0; }
-#task-list li { border-bottom: 1px solid #cccccc; padding: 6px 0; }
+#task-list li { border-bottom: 1px solid var(--border); padding: 6px 0; }
 #task-list select { margin-left: 4px; margin-right: 8px; }
 
 /* My Tasks: overdue rows get a red bar AND the word OVERDUE (not color alone). */
 #mytasks-section label { margin-left: 8px; }
 
 /* Live feedback under a field. */
-.field-feedback { display: block; color: #a40000; }
+.field-feedback { display: block; color: var(--danger); }
 
 /* Make the hidden attribute always win (table cells included). */
 [hidden] { display: none !important; }
@@ -64,46 +102,660 @@ section {
   position: sticky;
   top: 0;
   z-index: 1;
-  background: #ffffff;
+  background: var(--surface);
   min-height: 1.5em;          /* keeps its height when empty so the page does not jump */
   margin: 0 0 16px;
   padding: 8px 12px;
-  border-left: 4px solid transparent;
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--border);
+  border-radius: var(--radius);
 }
-#message.error { border-left-color: #a40000; }
-#message.success { border-left-color: #14532d; }
+#message.error { border-left-color: var(--danger); }
+#message.success { border-left-color: var(--success); }
 
 /* Add-forms are boxed with a heading. Lists and tables are not boxed. */
-.form-block { border: 1px solid #888888; padding: 8px 12px; margin: 0 0 12px; }
+.form-block { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 8px 12px; margin: 0 0 12px; }
 .form-block legend { font-weight: bold; padding: 0 6px; }
 
 /* Tables for the roster and My Tasks. */
-table { border-collapse: collapse; width: 100%; margin-top: 8px; }
-th, td { border: 0; border-bottom: 1px solid #cccccc; padding: 8px 10px; text-align: left; vertical-align: top; }
-th { background: #f0f0f0; }
+table { background: var(--surface); border-collapse: collapse; width: 100%; margin-top: 8px; }
+th, td { border: 0; border-bottom: 1px solid var(--border); padding: 8px 10px; text-align: left; vertical-align: top; }
+th { background: var(--bg); }
 td button { margin-right: 6px; }
 tr.overdue { background: #fdf0f0; }
-tr.overdue td:first-child { border-left: 4px solid #a40000; font-weight: bold; }
+tr.overdue td:first-child { border-left: 4px solid var(--danger); font-weight: bold; }
 
-/* Page navigation: same look as the subject tabs. */
-#main-nav button { margin-right: 6px; margin-bottom: 8px; }
-#main-nav button.selected { background: #1a1a1a; color: #ffffff; }
+/* Header: name first, full name smaller and gray (.meta), then the tab strip. */
+header p { margin: 0 0 12px; }
+
+/* Navigation: three quiet chips. */
+#main-nav { display: flex; flex-wrap: wrap; gap: 8px; }
+#main-nav button {
+  font: inherit;               /* buttons do not use the page font unless told to */
+  padding: 6px 14px;
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--muted);   /* controls keep a darker edge so they still look clickable */
+  border-radius: var(--radius);
+  margin: 0;
+  cursor: pointer;
+}
+#main-nav button.selected { background: var(--accent); border-color: var(--accent); color: var(--surface); font-weight: bold; }
+#main-nav button:disabled { color: var(--muted); border-style: dashed; cursor: not-allowed; }
 
 /* Demo tools footer. */
-footer { border-top: 1px solid #cccccc; margin-top: 24px; padding-top: 8px; }
+footer { border-top: 1px solid var(--border); margin-top: 24px; padding-top: 8px; }
 footer summary { cursor: pointer; }
 
 /* Type scale: three sizes. Secondary info is smaller and gray. */
 h1 { font-size: 1.6rem; margin: 8px 0; }
 h2 { font-size: 1.2rem; margin: 0 0 8px; }
 h3 { font-size: 1rem; }
-.meta { color: #444444; font-size: 0.9rem; }
+.meta { color: var(--muted); font-size: 0.9rem; }
 
 /* Status badges: differ by fill and weight, so they work without color. */
-.badge { display: inline-block; padding: 1px 8px; border: 2px solid #1a1a1a; font-size: 0.85rem; }
-.badge-to-do, .badge-not-started { background: #ffffff; color: #1a1a1a; }
-.badge-doing, .badge-ongoing { background: #dddddd; color: #1a1a1a; font-weight: bold; }
-.badge-done, .badge-completed { background: #1a1a1a; color: #ffffff; }
+.badge { display: inline-block; padding: 1px 8px; border: 1px solid var(--muted); border-radius: 4px; font-size: 0.85rem; }
+.badge-to-do, .badge-not-started { background: var(--surface); color: var(--text); }
+.badge-doing, .badge-ongoing { background: var(--border); color: var(--text); font-weight: bold; }
+.badge-done, .badge-completed { background: var(--text); color: var(--surface); }
 
 /* Overdue task in the project task list. */
-#task-list li.overdue-row { border-left: 4px solid #a40000; padding-left: 8px; background: #fdf0f0; }
+#task-list li.overdue-row { border-left: 4px solid var(--danger); padding-left: 8px; background: #fdf0f0; }
+
+/* Primary action: the four Add buttons and the Open buttons use the accent. */
+button[type="submit"], .btn-primary {
+  background: var(--accent);
+  color: var(--surface);
+  border-color: var(--accent);
+}
+
+/* Consistent spacing: every section title has the same gap before its content. */
+section h2 { margin: 0 0 12px; }
+section p { margin: 0 0 8px; }
+
+/* Lists sit a clear step below the form above them. */
+#subject-list, #project-list, #task-list { margin: 12px 0 0; }
+
+/* Empty messages: a quiet dashed box. An empty-state row is an <li> with no element inside it. */
+li:not(:has(*)) { color: var(--muted); background: var(--bg); border: 1px dashed var(--border); border-radius: var(--radius); padding: 12px 16px; }
+td[colspan] { color: var(--muted); padding: 16px 10px; }   /* "No tasks found." cell in a table */
+
+/* An empty message bar should not show as a white strip on the gray page. */
+#message:empty { background: transparent; border-color: transparent; }
+
+/* Workspace polish */
+body {
+  max-width: 1120px;
+  padding: clamp(16px, 3vw, 36px);
+  color: #172033;
+  background:
+    radial-gradient(ellipse at 12% 0%, rgba(11, 92, 173, 0.07), transparent 34rem),
+    #f3f5f9;
+  line-height: 1.6;
+}
+
+header, section {
+  border-color: #e4e8f0;
+  border-radius: 14px;
+  box-shadow: 0 8px 24px rgba(27, 39, 61, 0.045);
+}
+
+header {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 8px 24px;
+  padding: 22px 26px;
+  background: linear-gradient(115deg, #fff 58%, #f5f8ff);
+}
+
+header h1 {
+  margin: 0;
+  color: #173c70;
+  font-size: clamp(1.65rem, 3vw, 2rem);
+  letter-spacing: 0.09em;
+  line-height: 1.2;
+}
+
+header p {
+  grid-column: 1;
+  grid-row: 2;
+  margin: 0;
+  color: #657084;
+  font-size: 0.9rem;
+}
+
+#main-nav {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  align-self: center;
+  padding: 4px;
+  border: 1px solid #e7eaf0;
+  border-radius: 10px;
+  background: #f5f6f9;
+}
+
+#main-nav button {
+  border-color: transparent;
+  border-radius: 7px;
+  padding: 8px 14px;
+  color: #536075;
+  transition: background-color 140ms ease, color 140ms ease, box-shadow 140ms ease;
+}
+
+#main-nav button:hover:not(:disabled):not(.selected) {
+  color: var(--text);
+  background: #fff;
+}
+
+#main-nav button.selected {
+  background: var(--surface);
+  border-color: #e5e9f2;
+  color: var(--accent);
+  box-shadow: 0 2px 6px rgba(27, 39, 61, 0.08);
+}
+
+#acting-as-section {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 14px;
+  padding: 12px 18px;
+  background: #edf4ff;
+  border-color: #dce8f8;
+  box-shadow: none;
+}
+
+#acting-as-section h2 {
+  margin: 0 4px 0 0;
+  color: #244b7d;
+  font-size: 0.9rem;
+}
+
+#acting-as-section label {
+  color: #52647d;
+  font-size: 0.9rem;
+}
+
+#acting-as-section select {
+  min-width: 170px;
+}
+
+#acting-as-status, #role-note {
+  margin: 0;
+  color: #5d6e84;
+  font-size: 0.82rem;
+}
+
+#acting-as-status {
+  flex: 1 1 320px;
+  min-width: 0;
+  font-weight: 600;
+}
+
+section {
+  padding: clamp(18px, 3vw, 26px);
+  margin-bottom: 18px;
+}
+
+section h2 {
+  color: #1d2b42;
+  font-size: 1.2rem;
+  letter-spacing: -0.015em;
+}
+
+section p {
+  color: #647084;
+}
+
+button, input[type="text"], input[type="date"], select {
+  min-height: 38px;
+  border-color: #d5dbe6;
+  border-radius: 8px;
+  transition: border-color 140ms ease, box-shadow 140ms ease, background-color 140ms ease;
+}
+
+button {
+  padding: 7px 13px;
+  color: #344158;
+  font-weight: 600;
+}
+
+button:hover:not(:disabled) {
+  border-color: #aebbd0;
+  background-color: #f8faff;
+}
+
+button[type="submit"], .btn-primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+button[type="submit"]:hover:not(:disabled), .btn-primary:hover:not(:disabled) {
+  background: #084b90;
+  border-color: #084b90;
+  box-shadow: 0 3px 8px rgba(11, 92, 173, 0.2);
+}
+
+input[type="text"], input[type="date"], select {
+  padding: 7px 10px;
+}
+
+input::placeholder {
+  color: #929bad;
+}
+
+input:focus-visible, select:focus-visible, button:focus-visible {
+  outline: 3px solid rgba(11, 92, 173, 0.22);
+  outline-offset: 1px;
+  border-color: var(--accent);
+}
+
+.form-block {
+  padding: 18px;
+  border-color: #e5e9f0;
+  border-radius: 11px;
+  background: #f8f9fc;
+}
+
+.form-block legend {
+  color: #36445b;
+  font-size: 0.88rem;
+}
+
+#subject-form .form-block {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+#subject-form .form-block legend {
+  flex-basis: 100%;
+}
+
+#subject-form input {
+  box-sizing: border-box;
+  flex: 0 1 320px;
+}
+
+#subject-form label, #project-form label, #task-form label, #member-form label {
+  color: #566278;
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+
+#subject-tabs {
+  gap: 9px;
+  margin: 0 0 14px;
+}
+
+#subject-tabs button {
+  min-height: 40px;
+  padding: 7px 17px;
+  border-color: #dce2ec;
+  background: #fff;
+  color: #46546b;
+}
+
+#subject-tabs button.selected {
+  background: #173c70;
+  border-color: #173c70;
+  color: #fff;
+}
+
+#subject-list li {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 8px 12px;
+  color: #536075;
+  border: 1px solid #e5e9f0;
+  border-radius: 9px;
+  background: #fff;
+}
+
+#subject-list li span {
+  margin-right: auto;
+  color: #344158;
+  font-weight: 600;
+}
+
+#subject-list li button {
+  margin-left: 8px;
+}
+
+#project-form .form-block {
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  align-items: end;
+}
+
+#project-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+  gap: 12px;
+}
+
+#project-list li {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 16px;
+  border-color: #e4e8f0;
+  border-radius: 11px;
+  box-shadow: 0 2px 8px rgba(27, 39, 61, 0.035);
+  transition: border-color 140ms ease, transform 140ms ease, box-shadow 140ms ease;
+}
+
+#project-list li:hover {
+  border-color: #c8d5e8;
+  box-shadow: 0 6px 16px rgba(27, 39, 61, 0.07);
+  transform: translateY(-1px);
+}
+
+#project-list li.selected-row {
+  padding-left: 12px;
+  border-color: #b7ccec;
+  border-left: 4px solid var(--accent);
+  background: #f7faff;
+}
+
+#project-list li > div:first-child {
+  gap: 8px;
+}
+
+#project-list strong {
+  color: #24334b;
+}
+
+.meta {
+  color: #68758a;
+  font-size: 0.84rem;
+}
+
+#project-list .badge, #project-list select {
+  margin-left: 4px;
+}
+
+#roster-section, #tasks-section {
+  overflow: hidden;
+}
+
+table {
+  overflow: hidden;
+  border: 1px solid #e4e8f0;
+  border-radius: 10px;
+}
+
+th, td {
+  padding: 11px 13px;
+  border-bottom-color: #edf0f5;
+}
+
+th {
+  color: #526078;
+  background: #f6f8fb;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.035em;
+  text-transform: uppercase;
+}
+
+tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+tbody tr:hover:not(.overdue) {
+  background: #f8faff;
+}
+
+tr.overdue {
+  background: #fff3f2;
+}
+
+tr.overdue td:first-child {
+  border-left-color: #dc5555;
+}
+
+#task-form .form-block {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  align-items: end;
+  gap: 12px;
+}
+
+#task-form .form-block legend {
+  grid-column: 1 / -1;
+}
+
+#task-form .form-block > div {
+  margin: 0;
+}
+
+#task-form label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+#task-form input, #task-form select {
+  box-sizing: border-box;
+  width: 100%;
+}
+
+#member-form .form-block {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+#member-form .form-block legend {
+  flex-basis: 100%;
+}
+
+#task-status-filter, #mytasks-subject, #mytasks-status {
+  min-width: 130px;
+}
+
+#task-count, #mytasks-count {
+  margin-top: 12px;
+  color: #647084;
+  font-size: 0.86rem;
+}
+
+#task-list li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  padding: 13px 14px;
+  border: 1px solid #e6eaf1;
+  border-radius: 9px;
+  background: #fff;
+}
+
+#task-list li + li {
+  margin-top: 8px;
+}
+
+#task-list li strong {
+  color: #2c3a52;
+}
+
+#task-list li > span:not(.leader-only) {
+  color: #68758a;
+  font-size: 0.87rem;
+}
+
+#task-list li select {
+  margin: 0;
+}
+
+#task-list li.overdue-row {
+  padding-left: 10px;
+  border: 1px solid #f3cccc;
+  border-left: 4px solid var(--danger);
+  border-radius: 9px;
+  background: #fff4f3;
+}
+
+#mytasks-section details {
+  margin: 14px 0;
+  padding: 12px 14px;
+  border: 1px solid #e5e9f0;
+  border-radius: 9px;
+  background: #f8f9fc;
+}
+
+#mytasks-section summary {
+  color: #40506a;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+#mytasks-section details > div {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+#mytasks-section label {
+  margin: 0 0 0 4px;
+  color: #566278;
+  font-size: 0.86rem;
+  font-weight: 600;
+}
+
+.badge {
+  padding: 3px 9px;
+  border-color: #dce2ec;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.badge-to-do, .badge-not-started {
+  background: #f3f5f8;
+  color: #536075;
+}
+
+.badge-doing, .badge-ongoing {
+  border-color: #c9dcf5;
+  background: #edf5ff;
+  color: #24558e;
+}
+
+.badge-done, .badge-completed {
+  border-color: #cce8d6;
+  background: #edf8f0;
+  color: #24633b;
+}
+
+.field-feedback {
+  margin-top: 4px;
+  font-size: 0.8rem;
+}
+
+#message {
+  border-radius: 9px;
+  background: #fff;
+  box-shadow: 0 4px 14px rgba(27, 39, 61, 0.04);
+}
+
+#message:empty {
+  display: none;
+}
+
+footer {
+  color: #68758a;
+  border-color: #e2e7ef;
+}
+
+footer summary {
+  padding: 6px 0;
+  font-size: 0.86rem;
+}
+
+@media (max-width: 680px) {
+  body {
+    padding: 14px;
+  }
+
+  header {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    padding: 20px;
+  }
+
+  header p, #main-nav {
+    grid-column: 1;
+    grid-row: auto;
+  }
+
+  #main-nav {
+    justify-self: stretch;
+    overflow-x: auto;
+  }
+
+  #main-nav button {
+    flex: 1 0 auto;
+    padding: 8px 10px;
+  }
+
+  #acting-as-section {
+    align-items: flex-start;
+  }
+
+  #acting-as-section h2 {
+    flex-basis: 100%;
+  }
+
+  #role-note {
+    flex-basis: 100%;
+  }
+
+  #subject-form .form-block {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  #subject-form .form-block legend {
+    flex-basis: auto;
+  }
+
+  #subject-form label, #subject-form input, #subject-form button {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  #subject-list li {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  #subject-list li span {
+    flex-basis: 100%;
+  }
+
+  table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  #task-list li > span:not(.leader-only) {
+    flex-basis: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}

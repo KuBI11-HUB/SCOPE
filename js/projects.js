@@ -31,7 +31,9 @@ function createProjectRow(project) {
   const nameText = document.createElement("strong");
   nameText.textContent = project.name;
   line1.appendChild(nameText);
-  line1.appendChild(makeButton("Open", function () { selectProject(project.id); }));
+  const openButton = makeButton("Open", function () { selectProject(project.id); });
+  openButton.className = "btn-primary";   // CSS hook only: styles Open as the primary button
+  line1.appendChild(openButton);
   line1.appendChild(makeButton("Delete", function () { deleteProject(project.id); }));
 
   // Line 2 (smaller, gray): due date, leader, status.
